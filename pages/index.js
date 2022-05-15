@@ -24,25 +24,30 @@ export default function Home() {
     }
     dispatch({ type: "SET_LOADING" });
     const { code, url } = state;
-    (async () => {
-      const rawResponse = await fetch("/api/url-short", {
-        method: "POST",
-        headers: {
-          Accept: "application/json",
-          "Content-Type": "application/json"
-        },
-        body: JSON.stringify({ code, url })
-      });
-      if (rawResponse.status !== 200) {
-        alert("Invalid response");
+    async function setData() {
+      try {
+        const rawResponse = await fetch("/api/url-short", {
+          method: "POST",
+          headers: {
+            Accept: "application/json",
+            "Content-Type": "application/json"
+          },
+          body: JSON.stringify({ code, url })
+        });
+        if (rawResponse.status !== 200) {
+          alert("Invalid response");
+        }
+      } catch (e) {
+        alert("Something went wrong" + e.message);
       }
-    })();
+    }
+    setData();
     dispatch({ type: "TOGGEL" });
   };
   return (
     <>
       <Head>
-        <title>Url Shotener</title>
+        <title>URL Shotener</title>
         <meta name="description" content="Create short links easy and faster." />
         <link rel="icon" href="/favicon.ico" />
       </Head>
@@ -77,7 +82,7 @@ function ShortLink({ code }) {
       <code>{`${window.location.href}${code}`}</code>
       <button
         type="button"
-        className="inline-block	items-start bg-green-500 rounded-md hover:bg-green-600 text-xs text-center text-white p-1"
+        className="inline-block	items-start bg-green-500 rounded-md hover:bg-green-600 text-xs text-center text-white p-2"
         onClick={() => {
           navigator.clipboard.writeText(`${window.location.href}${code}`);
         }}
