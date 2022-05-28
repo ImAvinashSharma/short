@@ -1,6 +1,7 @@
 import Head from "next/head";
-import React, { useReducer, useEffect, useRef } from "react";
+import React, { useReducer, useEffect, useRef,useState } from "react";
 import shortid from "shortid";
+// import Image from "next/image";
 import { reducer, validURL } from "../component/reducer";
 const initialState = {
   url: "",
@@ -14,7 +15,7 @@ export default function Home() {
     inputRef.current.focus();
   }, []);
   const [state, dispatch] = useReducer(reducer, initialState);
-
+  const [short,setShort] = useState("");
   shortid.characters("0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ-_");
 
   const handleFormSubmit = async e => {
@@ -24,6 +25,9 @@ export default function Home() {
     }
     dispatch({ type: "SET_LOADING" });
     const { code, url } = state;
+    if(short !== "" || short !== null){
+      code = short;
+    }
     async function setData() {
       try {
         const rawResponse = await fetch("/api/url-short", {
@@ -61,12 +65,16 @@ export default function Home() {
               Shorten URL
             </button>
           </div>
+          <div className="flex items-center	justify-center text-white pt-4 ">
+            <input value={short} placeholder="Enter the Short code(optional)" type="text" className="text-black md:w-96 md:p-2 border-none ml-6 outline-none text-xl rounded-full text-center"
+            onChange={e=>setShort(e.target.value)}/>
+          </div>
           {state.isLoading && (
             <div className="flex items-center	justify-center pt-4">
               <img src="loader.gif" width="144" height="144" alt="loading..." className="rounded-full" />
             </div>
           )}
-          <div>{state.isPressent && <ShortLink code={state.code} />}</div>
+          <div>{state.isPressent && <ShortLink code={state.code} short={short} />}</div>
         </form>
       </div>
       <h1 className="text-white text-center bg-black h-9">
@@ -76,7 +84,10 @@ export default function Home() {
   );
 }
 
-function ShortLink({ code }) {
+function ShortLink({ code,short }) {
+  if(short !== ""){
+    code = short
+  }
   return (
     <pre className="bg-black m-4 p-4 pt-5 text-white rounded-xl">
       <code>{`${window.location.href}${code}`}</code>

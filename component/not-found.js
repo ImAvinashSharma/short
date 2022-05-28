@@ -5,7 +5,7 @@ const NotFound = () => {
     <Box height="100vh" display="flex" justifyContent="center" alignItems="center" flexDirection="column">
       <Heading>Invalid URL</Heading>
       <Heading as="h2" size="lg">
-        Try after sometime
+        We are working hard to get this page.We recommend you to wait for sometime and try after.
       </Heading>
     </Box>
   );

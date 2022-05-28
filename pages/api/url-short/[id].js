@@ -10,7 +10,7 @@ export default async (req, res) => {
   if (req.method === "GET") {
     const { id } = req.query;
     const data = await redis.get(id);
-    return res.json({data});
+    return res.json({ data });
   }
   return res.status(404).json("Error");
 };
